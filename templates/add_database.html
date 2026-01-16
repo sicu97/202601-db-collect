@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>데이터베이스 추가</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: #555; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        input:focus, select:focus { outline: none; border-color: #007bff; }
+        .btn { padding: 12px 24px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-right: 10px; }
+        .btn:hover { background: #0056b3; }
+        .btn-secondary { background: #6c757d; }
+        .btn-secondary:hover { background: #5a6268; }
+        .oracle-fields, .mssql-fields { display: none; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #007bff; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← 목록으로 돌아가기</a>
+        <h1>새 데이터베이스 추가</h1>
+        
+        <form method="POST">
+            <div class="form-group">
+                <label for="db_name">데이터베이스 이름 *</label>
+                <input type="text" id="db_name" name="db_name" required placeholder="예: my_database">
+            </div>
+            
+            <div class="form-group">
+                <label for="db_type">데이터베이스 타입 *</label>
+                <select id="db_type" name="db_type" required onchange="toggleFields()">
+                    <option value="">선택하세요</option>
+                    <option value="postgresql">PostgreSQL</option>
+                    <option value="mysql">MySQL</option>
+                    <option value="oracle">Oracle</option>
+                    <option value="mssql">SQL Server</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="host">호스트 *</label>
+                <input type="text" id="host" name="host" required value="localhost">
+            </div>
+            
+            <div class="form-group">
+                <label for="port">포트 *</label>
+                <input type="number" id="port" name="port" required value="5432">
+            </div>
+            
+            <div class="form-group">
+                <label for="database">데이터베이스명 *</label>
+                <input type="text" id="database" name="database" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="user">사용자명 *</label>
+                <input type="text" id="user" name="user" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">비밀번호 *</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <!-- Oracle 전용 필드 -->
+            <div class="oracle-fields">
+                <div class="form-group">
+                    <label for="service_name">Service Name</label>
+                    <input type="text" id="service_name" name="service_name" placeholder="예: ORCL">
+                    <small>또는 SID를 입력하세요 (둘 중 하나만)</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="sid">SID</label>
+                    <input type="text" id="sid" name="sid" placeholder="예: ORCL">
+                </div>
+            </div>
+            
+            <!-- SQL Server 전용 필드 -->
+            <div class="mssql-fields">
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" name="trusted_connection" value="true">
+                        Windows 인증 사용
+                    </label>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <button type="submit" class="btn">저장</button>
+                <a href="/" class="btn btn-secondary">취소</a>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        const defaultPorts = {
+            'postgresql': 5432,
+            'mysql': 3306,
+            'oracle': 1521,
+            'mssql': 1433
+        };
+        
+        function toggleFields() {
+            const dbType = document.getElementById('db_type').value;
+            const portInput = document.getElementById('port');
+            
+            // 포트 기본값 설정
+            if (defaultPorts[dbType]) {
+                portInput.value = defaultPorts[dbType];
+            }
+            
+            // Oracle 필드 표시/숨김
+            document.querySelector('.oracle-fields').style.display = 
+                dbType === 'oracle' ? 'block' : 'none';
+            
+            // SQL Server 필드 표시/숨김
+            document.querySelector('.mssql-fields').style.display = 
+                dbType === 'mssql' ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>

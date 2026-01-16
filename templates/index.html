@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DB 접속 정보 관리</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; margin-bottom: 30px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .btn { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn:hover { background: #0056b3; }
+        .btn-danger { background: #dc3545; }
+        .btn-danger:hover { background: #c82333; }
+        .btn-success { background: #28a745; }
+        .btn-success:hover { background: #218838; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #f8f9fa; font-weight: 600; }
+        tr:hover { background: #f8f9fa; }
+        .actions { display: flex; gap: 10px; }
+        .badge { padding: 4px 8px; border-radius: 3px; font-size: 12px; font-weight: 600; }
+        .badge-postgresql { background: #336791; color: white; }
+        .badge-mysql { background: #00758f; color: white; }
+        .badge-oracle { background: #f80000; color: white; }
+        .badge-mssql { background: #cc2927; color: white; }
+        .empty { text-align: center; padding: 40px; color: #999; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 데이터베이스 접속 정보 관리</h1>
+            <a href="/add" class="btn">+ 새 데이터베이스 추가</a>
+        </div>
+
+        {% if databases %}
+        <table>
+            <thead>
+                <tr>
+                    <th>이름</th>
+                    <th>타입</th>
+                    <th>호스트</th>
+                    <th>포트</th>
+                    <th>데이터베이스</th>
+                    <th>작업</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for db in databases %}
+                <tr>
+                    <td><strong>{{ db.name }}</strong></td>
+                    <td><span class="badge badge-{{ db.type }}">{{ db.type }}</span></td>
+                    <td>{{ db.host }}</td>
+                    <td>{{ db.port }}</td>
+                    <td>{{ db.database }}</td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn btn-success" onclick="testConnection('{{ db.name }}')">테스트</button>
+                            <a href="/edit/{{ db.name }}" class="btn">수정</a>
+                            <button class="btn btn-danger" onclick="deleteDatabase('{{ db.name }}')">삭제</button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty">
+            <p>등록된 데이터베이스가 없습니다.</p>
+            <p>새 데이터베이스를 추가해주세요.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function testConnection(dbName) {
+            if (confirm(`'${dbName}' 연결을 테스트하시겠습니까?`)) {
+                fetch(`/test/${dbName}`, { method: 'POST' })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('✓ 연결 성공!');
+                        } else {
+                            alert('✗ 연결 실패');
+                        }
+                    });
+            }
+        }
+
+        function deleteDatabase(dbName) {
+            if (confirm(`정말로 '${dbName}'을(를) 삭제하시겠습니까?`)) {
+                fetch(`/delete/${dbName}`, { method: 'POST' })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('✓ 삭제 완료');
+                            location.reload();
+                        } else {
+                            alert('✗ 삭제 실패: ' + data.error);
+                        }
+                    });
+            }
+        }
+    </script>
+</body>
+</html>

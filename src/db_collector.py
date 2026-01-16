@@ -71,6 +71,48 @@ class DBCollector:
                 user=db_config['user'],
                 password=db_config['password']
             )
+        elif db_type == 'oracle':
+            import cx_Oracle
+            # DSN 생성
+            if 'service_name' in db_config:
+                dsn = cx_Oracle.makedsn(
+                    db_config['host'],
+                    db_config['port'],
+                    service_name=db_config['service_name']
+                )
+            elif 'sid' in db_config:
+                dsn = cx_Oracle.makedsn(
+                    db_config['host'],
+                    db_config['port'],
+                    sid=db_config['sid']
+                )
+            else:
+                raise ValueError("Oracle 연결에는 service_name 또는 sid가 필요합니다")
+            
+            conn = cx_Oracle.connect(
+                user=db_config['user'],
+                password=db_config['password'],
+                dsn=dsn
+            )
+        elif db_type == 'mssql':
+            import pyodbc
+            # SQL Server 연결 문자열 생성
+            conn_str = (
+                f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+                f"SERVER={db_config['host']},{db_config['port']};"
+                f"DATABASE={db_config['database']};"
+                f"UID={db_config['user']};"
+                f"PWD={db_config['password']}"
+            )
+            # 추가 옵션이 있다면 적용
+            if 'trusted_connection' in db_config and db_config['trusted_connection']:
+                conn_str = (
+                    f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+                    f"SERVER={db_config['host']},{db_config['port']};"
+                    f"DATABASE={db_config['database']};"
+                    f"Trusted_Connection=yes"
+                )
+            conn = pyodbc.connect(conn_str)
         else:
             raise ValueError(f"지원하지 않는 데이터베이스 타입: {db_type}")
         

@@ -1,6 +1,6 @@
 # 데이터베이스 연결 설정
 databases:
-  # 소스 데이터베이스 (예시)
+  # PostgreSQL 예시
   source_db:
     type: "postgresql"  # postgresql, mysql, oracle, mssql 등
     host: "localhost"
@@ -9,14 +9,36 @@ databases:
     user: "your_user"
     password: "your_password"
   
-  # 추가 데이터베이스가 있다면 여기에 추가
-  # another_db:
-  #   type: "mysql"
-  #   host: "localhost"
-  #   port: 3306
-  #   database: "another_db"
-  #   user: "user"
-  #   password: "password"
+  # MySQL 예시
+  mysql_db:
+    type: "mysql"
+    host: "localhost"
+    port: 3306
+    database: "another_db"
+    user: "user"
+    password: "password"
+  
+  # Oracle 예시
+  oracle_db:
+    type: "oracle"
+    host: "localhost"
+    port: 1521
+    service_name: "ORCL"  # 또는 sid: "ORCL"
+    user: "system"
+    password: "oracle_password"
+    # DSN 형식: host:port/service_name
+    # 또는 TNS 이름 사용 가능
+  
+  # SQL Server 예시
+  mssql_db:
+    type: "mssql"
+    host: "localhost"
+    port: 1433
+    database: "master"
+    user: "sa"
+    password: "mssql_password"
+    # Windows 인증 사용시:
+    # trusted_connection: true
 
 # SQLite 저장 설정
 sqlite:
