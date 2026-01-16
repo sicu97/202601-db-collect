@@ -20,7 +20,7 @@ databases:
 
 # SQLite 저장 설정
 sqlite:
-  output_path: "data/collected_data.db"
+  output_path: "../data/collected_data.db"
 
 # SQL 파일 경로
 sql_directory: "sql_queries"

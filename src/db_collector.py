@@ -16,7 +16,7 @@ load_dotenv()
 class DBCollector:
     """데이터베이스에서 데이터를 수집하여 SQLite에 저장"""
     
-    def __init__(self, config_path: str = "config.yaml"):
+    def __init__(self, config_path: str = "conf/config.yaml"):
         """
         Args:
             config_path: 설정 파일 경로

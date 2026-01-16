@@ -11,6 +11,9 @@ build/
 dist/
 *.egg-info/
 
+# Compiled files
+bin/*.pyc
+
 # 환경 변수
 .env
 
