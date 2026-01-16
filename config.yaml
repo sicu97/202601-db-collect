@@ -1,0 +1,32 @@
+# 데이터베이스 연결 설정
+databases:
+  # 소스 데이터베이스 (예시)
+  source_db:
+    type: "postgresql"  # postgresql, mysql, oracle, mssql 등
+    host: "localhost"
+    port: 5432
+    database: "your_database"
+    user: "your_user"
+    password: "your_password"
+  
+  # 추가 데이터베이스가 있다면 여기에 추가
+  # another_db:
+  #   type: "mysql"
+  #   host: "localhost"
+  #   port: 3306
+  #   database: "another_db"
+  #   user: "user"
+  #   password: "password"
+
+# SQLite 저장 설정
+sqlite:
+  output_path: "data/collected_data.db"
+
+# SQL 파일 경로
+sql_directory: "sql_queries"
+
+# 실행 옵션
+options:
+  batch_size: 1000  # 배치 처리 크기
+  timeout: 300  # 쿼리 타임아웃 (초)
+  log_level: "INFO"  # DEBUG, INFO, WARNING, ERROR
